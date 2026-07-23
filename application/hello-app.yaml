@@ -5,6 +5,7 @@ metadata:
   namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/sync-options: Prune=false
+    argocd.argoproj.io/manifest-generate-paths: /helm/hello
 spec:
   project: default
   source:  
