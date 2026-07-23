@@ -1,6 +1,6 @@
 namespace: demo-gitops
 
-response: This is an example. Version 2
+response: This is an example. Version 3
 
 # Default values for hello.
 # This is a YAML-formatted file.
