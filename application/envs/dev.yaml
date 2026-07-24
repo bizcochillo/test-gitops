@@ -1,1 +1,2 @@
-
+env: dev
+values_dir: /application/values/values-dev.yaml
