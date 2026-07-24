@@ -1,6 +1,6 @@
 namespace: demo-gitops
 
-response: This is an example (preprod)
+response: This is an example (prod)
 
 # Default values for hello.
 # This is a YAML-formatted file.
