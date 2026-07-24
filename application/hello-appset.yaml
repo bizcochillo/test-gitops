@@ -5,36 +5,30 @@ metadata:
   namespace: openshift-gitops
 spec:
   generators:
-    - list:
-        elements:
-          - env: dev
-            values-dir: /application/values/values-dev.yaml
-          - env: pre
-            values-dir: /application/values/values-pre.yaml
-          - env: pro
-            values-dir: /application/values/values-pro.yaml
+    # 1. El motor ahora es puramente Git. Buscará cualquier fichero .yaml aquí.
     - git:
-        files:
-          - path: '{{values-dir}}'
         repoURL: 'https://github.com/bizcochillo/test-gitops.git'
         revision: main
+        files:
+          - path: 'application/envs/*.yaml'
   template:
     metadata:
+      # 2. Inyectamos la optimización para la CPU con la ruta exacta
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: '{{values-dir}};/helm/hello'
+        argocd.argoproj.io/manifest-generate-paths: '{{values_dir}};/helm/hello'
       name: 'hello-appset-{{env}}'
     spec:
-      destination:
-        namespace: 'hello-gitops-{{env}}'
-        server: 'https://kubernetes.default.svc'
       project: default
       source:
-        helm:
-          valueFiles:
-            - '{{values-dir}}'
         path: helm/hello
         repoURL: 'https://github.com/bizcochillo/test-gitops.git'
         targetRevision: main
+        helm:
+          valueFiles:
+            - '{{values_dir}}'
+      destination:
+        namespace: 'hello-gitops-{{env}}'
+        server: 'https://kubernetes.default.svc'
       syncPolicy:
         automated:
           prune: true
