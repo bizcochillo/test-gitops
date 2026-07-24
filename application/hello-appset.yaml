@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: hello-appset
+  namespace: openshift-gitops
+spec:
+  generators: 
+    - list:
+        elements:
+          - env: dev
+            values-dir: application/values/values-dev.yaml
+          - env: pre
+            values-dir: application/values/values-pre.yaml
+          - env: pro
+            values-dir: application/values/values-pro.yaml    
+    - git:
+        # Pon aquí la URL del repositorio donde están los values
+        repoURL: 'https://github.com/bizcochillo/test-gitops.git' 
+        # Usamos la variable de la lista para buscar en la rama correcta
+        revision: 'main'
+        files:
+          # Usamos la ruta de la lista. Si el archivo no existe, no genera la app.
+          - path: '{{values-dir}}'
+  template: 
+    metadata: 
+      annotations: 
+        argocd.argoproj.io/manifest-generate-paths: '{{values-dir}};helm/hello'
+    spec:
+      project: default
+      source:  
+        repoURL: https://github.com/bizcochillo/test-gitops.git
+        targetRevision: main
+        path: helm/hello
+        helm:
+          valueFiles:
+            - '{{values-dir}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: hello-gitops
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/managed-by: openshift-gitops
