@@ -4,16 +4,14 @@ metadata:
   name: hello-appset
   namespace: openshift-gitops
 spec:
-  generators:
-    # 1. El motor ahora es puramente Git. Buscará cualquier fichero .yaml aquí.
+  generators:    
     - git:
         repoURL: 'https://github.com/bizcochillo/test-gitops.git'
         revision: main
         files:
           - path: '/application/envs/*.yaml'
   template:
-    metadata:
-      # 2. Inyectamos la optimización para la CPU con la ruta exacta
+    metadata:     
       annotations:
         argocd.argoproj.io/manifest-generate-paths: '{{values_dir}};/helm/hello'
       name: 'hello-appset-{{env}}'
