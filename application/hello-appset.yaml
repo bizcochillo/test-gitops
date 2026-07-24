@@ -10,7 +10,7 @@ spec:
         repoURL: 'https://github.com/bizcochillo/test-gitops.git'
         revision: main
         files:
-          - path: 'application/envs/*.yaml'
+          - path: '/application/envs/*.yaml'
   template:
     metadata:
       # 2. Inyectamos la optimización para la CPU con la ruta exacta
