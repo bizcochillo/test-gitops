@@ -4,45 +4,43 @@ metadata:
   name: hello-appset
   namespace: openshift-gitops
 spec:
-  generators: 
+  generators:
     - list:
         elements:
           - env: dev
-            values-dir: application/values/values-dev.yaml
+            values-dir: /application/values/values-dev.yaml
           - env: pre
-            values-dir: application/values/values-pre.yaml
+            values-dir: /application/values/values-pre.yaml
           - env: pro
-            values-dir: application/values/values-pro.yaml    
+            values-dir: /application/values/values-pro.yaml
     - git:
-        # Pon aquí la URL del repositorio donde están los values
-        repoURL: 'https://github.com/bizcochillo/test-gitops.git' 
-        # Usamos la variable de la lista para buscar en la rama correcta
-        revision: 'main'
         files:
-          # Usamos la ruta de la lista. Si el archivo no existe, no genera la app.
           - path: '{{values-dir}}'
-  template: 
-    metadata: 
-      annotations: 
-        argocd.argoproj.io/manifest-generate-paths: '{{values-dir}};helm/hello'
+        repoURL: 'https://github.com/bizcochillo/test-gitops.git'
+        revision: main
+  template:
+    metadata:
+      annotations:
+        argocd.argoproj.io/manifest-generate-paths: '{{values-dir}};/helm/hello'
+      name: 'hello-appset-{{env}}'
     spec:
+      destination:
+        namespace: 'hello-gitops-{{env}}'
+        server: 'https://kubernetes.default.svc'
       project: default
-      source:  
-        repoURL: https://github.com/bizcochillo/test-gitops.git
-        targetRevision: main
-        path: helm/hello
+      source:
         helm:
           valueFiles:
             - '{{values-dir}}'
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: hello-gitops
+        path: helm/hello
+        repoURL: 'https://github.com/bizcochillo/test-gitops.git'
+        targetRevision: main
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
         managedNamespaceMetadata:
           labels:
             argocd.argoproj.io/managed-by: openshift-gitops
+        syncOptions:
+          - CreateNamespace=true
