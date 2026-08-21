@@ -1,6 +1,6 @@
 namespace: demo-gitops
 
-response: This is an example (multi repo / update 2)
+response: This is an example (multi repo / update ABSOLUTE PATH)
 
 # Default values for hello.
 # This is a YAML-formatted file.
