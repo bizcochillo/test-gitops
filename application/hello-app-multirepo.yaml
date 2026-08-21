@@ -11,8 +11,7 @@ spec:
   sources:  
   - repoURL: https://github.com/bizcochillo/test-gitops-helm.git
     targetRevision: main
-    path: helm/hello
-    source:
+    path: helm/hello    
     helm:
       valueFiles:
         - $values/application/values/values-multi.yaml
