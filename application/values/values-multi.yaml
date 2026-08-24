@@ -1,6 +1,6 @@
 namespace: demo-gitops
 
-response: Multi-repo test change. 
+response: Multi-repo test change (2). 
 
 # Default values for hello.
 # This is a YAML-formatted file.
