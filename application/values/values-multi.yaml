@@ -1,6 +1,6 @@
 namespace: demo-gitops
 
-response: Yo no maldigo mi suerte, porque minero naci
+response: This is a 1.16.3 test
 
 # Default values for hello.
 # This is a YAML-formatted file.
