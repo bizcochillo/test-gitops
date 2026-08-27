@@ -1,6 +1,6 @@
 namespace: demo-gitops
 
-response: No way. No update. No OutOfSync
+response: No way. No update.
 
 # Default values for hello.
 # This is a YAML-formatted file.
